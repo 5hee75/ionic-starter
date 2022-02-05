@@ -1,0 +1,8 @@
+/* ion-item.input .show-focused {
+  visibility: hidden;
+}
+
+ion-item.input.item-has-focus .show-focused,
+ion-item.input.item-has-value .show-focused {
+  visibility: visible;
+} */
