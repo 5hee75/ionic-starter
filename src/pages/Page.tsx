@@ -6,9 +6,7 @@ import {
   IonMenuButton,
   IonPage,
   IonTitle,
-  IonToolbar,
-  IonRow,
-  IonCol
+  IonToolbar
 } from "@ionic/react";
 import { logoUsd } from "ionicons/icons";
 
@@ -59,15 +57,6 @@ const Page: React.FC = () => {
           <Input label="Split A" />
           <Input label="Split B" />
         </SplitRow>
-        {/* <IonRow>
-          <IonCol className="ion-no-padding">
-            <Input label="Split A" />
-          </IonCol>
-
-          <IonCol className="ion-no-padding">
-            <Input label="Split B" />
-          </IonCol>
-        </IonRow> */}
 
         <TextArea label="Comment" maxLength={50} />
       </IonContent>
