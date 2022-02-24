@@ -80,20 +80,10 @@ const ListPage = () => {
       </IonHeader>
 
       <IonContent fullscreen className="page">
-        <Toggle />
         <IonList>
           <Repeat n={1}>
             {(s) => (
               <>
-                <ListHeader>Section {s}</ListHeader>
-                <Repeat n={2}>
-                  {(i) => (
-                    <IonItem>
-                      Item {s}.{i}
-                      <Toggle slot="end" onIonChange={onToggle} />
-                    </IonItem>
-                  )}
-                </Repeat>
                 <ListHeader>Section {s} Accordion</ListHeader>
                 <Repeat n={1}>
                   {(i) => (
