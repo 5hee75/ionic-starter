@@ -137,7 +137,7 @@ export function SelectOptionList({
 
 const SelectItem = styled(IonItem).attrs((props) => {
   // Build Ionic classes to match styles of IonItem containing native input fields
-  let classes = ["item-select", "item-interactive"];
+  let classes = ["form-row", "item-select", "item-interactive"];
   if (props.active) {
     classes.push("item-has-focus");
   }

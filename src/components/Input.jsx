@@ -8,7 +8,9 @@ import {
   IonIcon,
   IonTextarea,
   IonText,
-  IonNote
+  IonNote,
+  IonRow,
+  IonCol
 } from "@ionic/react";
 
 export const InputItem = styled(IonItem).attrs((props) => ({
@@ -59,7 +61,7 @@ const InputBase = ({ children, ...props }) => (
 
 export const Input = ({ adornment = "", ...props }) => {
   return (
-    <InputBase {...props}>
+    <InputBase className="form-row" {...props}>
       <IonInput {...props}>
         {adornment && (
           <IonIcon slot="start" className="adornment" icon={adornment} />
@@ -71,8 +73,20 @@ export const Input = ({ adornment = "", ...props }) => {
 
 export const TextArea = ({ maxLength, ...props }) => {
   return (
-    <InputBase counter {...props}>
+    <InputBase className="form-row" counter {...props}>
       <IonTextarea maxlength={maxLength} />
     </InputBase>
+  );
+};
+
+export const SplitRow = ({ children = null }) => {
+  const childArr = React.Children.toArray(children);
+
+  return (
+    <IonRow className="form-row">
+      {childArr.map((child) => (
+        <IonCol className="ion-no-padding">{child}</IonCol>
+      ))}
+    </IonRow>
   );
 };

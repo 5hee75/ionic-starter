@@ -6,3 +6,7 @@ ion-item.input.item-has-focus .show-focused,
 ion-item.input.item-has-value .show-focused {
   visibility: visible;
 } */
+
+.form-row {
+  margin-top: 8px;
+}
