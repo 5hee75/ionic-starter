@@ -70,7 +70,12 @@ const Page: React.FC = () => {
       <IonContent className="page">
         <Input label="Name" />
 
-        <Input label="Price" adornment={logoUsd} />
+        <Input
+          label="Price"
+          adornment={logoUsd}
+          inputMode="decimal"
+          type="number"
+        />
         <Select
           label="Select one"
           value={selected}

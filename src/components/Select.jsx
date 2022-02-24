@@ -164,9 +164,25 @@ const SelectItem = styled(IonItem).attrs((props) => {
     transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1) 0s,
       -webkit-transform 0.15s cubic-bezier(0.4, 0, 0.2, 1) 0s;
   }
-  &.item-has-value {
+  /* &.item-has-value {
     --border-color: var(--ion-color-success-tint);
+  } */
+
+  & > [slot="error"] {
+    --ion-color: var(--ion-color-danger);
+    color: var(--ion-color-danger);
   }
+
+  ${(props) =>
+    !props.error
+      ? null
+      : `
+    --border-color: var(--ion-color-danger) !important;
+    & > ion-label.label {
+      --ion-color: var(--ion-color-danger);
+      color: var(--ion-color-danger);
+    }
+  `}
 `;
 
 const SelectLabel = styled(IonLabel).attrs({
@@ -204,7 +220,8 @@ export function Select({
   options = [],
   value,
   onSelect,
-  multiple = false
+  multiple = false,
+  error = ""
 }) {
   const [isActive, setActive] = useState(false);
   const handleDismiss = () => {
@@ -258,6 +275,7 @@ export function Select({
   const valueLabel = getLabel();
   return (
     <SelectItem
+      error={error}
       hasValue={valueLabel ? true : false}
       active={isActive}
       button

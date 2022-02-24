@@ -14,15 +14,23 @@ import {
 export const InputItem = styled(IonItem).attrs((props) => ({
   lines: props.lines || "inset"
 }))`
-    
+  ${(props) =>
+    !props.error
+      ? null
+      : `
+    --border-color: var(--ion-color-danger) !important;
+    & > ion-label.label {
+      color: var(--ion-color-danger) !important;
+    }
+  `}
+
   &.item-has-focus {
     --background: #f8f8f8;
   }
 
-  & .adornment,
-  & .count {
+  & .adornment {
     visibility: hidden;
-    margin-right: 4px;
+    margin-right: 2px;
   }
 
   &.item-has-value .adornment,
@@ -30,50 +38,41 @@ export const InputItem = styled(IonItem).attrs((props) => ({
     visibility: visible;
   }
 
-  &.item-has-focus .count {
-    visibility: visible;
+  & > [slot="error"] {
+    color: var(--ion-color-danger) !important;
   }
 `;
 
 const InputLabel = styled(IonLabel).attrs({
   position: "floating",
-  color: "medium"
+  color: "medium",
+  className: "label"
 })``;
 
-const InputCount = styled(IonText).attrs((props) => ({
-  color: props.color || "medium",
-  className: "count ion-align-self-end"
-}))``;
+const InputBase = ({ children, ...props }) => (
+  <InputItem {...props}>
+    <InputLabel>{props.label}</InputLabel>
+    {children}
+    {props.error && <IonNote slot="error">{props.error}</IonNote>}
+  </InputItem>
+);
 
-export const Input = ({ label, adornment = "" }) => {
+export const Input = ({ adornment = "", ...props }) => {
   return (
-    <>
-      <InputItem>
-        <InputLabel>{label}</InputLabel>
-        <IonInput>
-          {adornment && <IonIcon className="adornment" icon={adornment} />}
-        </IonInput>
-        <IonNote slot="error">Something bad here</IonNote>
-      </InputItem>
-    </>
+    <InputBase {...props}>
+      <IonInput {...props}>
+        {adornment && (
+          <IonIcon slot="start" className="adornment" icon={adornment} />
+        )}
+      </IonInput>
+    </InputBase>
   );
 };
 
-export const TextArea = ({ label, maxLength, ...itemProps }) => {
-  const [count, setCount] = useState(0);
-
-  const onChange = (e) => {
-    setCount(e.detail.value.length);
-  };
+export const TextArea = ({ maxLength, ...props }) => {
   return (
-    <InputItem counter {...itemProps}>
-      <InputLabel>{label}</InputLabel>
-      <IonTextarea onIonChange={onChange} maxlength={maxLength} />
-      {/* {count > 0 && (
-        <InputCount color={maxLength - count < 10 ? "danger" : "medium"}>
-          {count}/{maxLength}
-        </InputCount>
-      )} */}
-    </InputItem>
+    <InputBase counter {...props}>
+      <IonTextarea maxlength={maxLength} />
+    </InputBase>
   );
 };
