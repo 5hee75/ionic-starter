@@ -20,6 +20,7 @@ export const InputItem = styled(IonItem).attrs((props) => ({
     !props.error
       ? null
       : `
+      
     --border-color: var(--ion-color-danger) !important;
     & > ion-label.label {
       color: var(--ion-color-danger) !important;

@@ -42,6 +42,20 @@ const StyledAccordion = styled(IonAccordion)`
   &:first-of-type > ion-item[slot="header"] {
     --border-width: 0;
   }
+  & > [slot="content"] {
+    ${(props) =>
+      props.status === "fail"
+        ? `background-image: linear-gradient(
+      to bottom,
+      rgba(255, 0, 0, 0.05),
+      rgba(255, 0, 0, 0.01),
+      rgba(255, 0, 0, 0)
+    );
+    & > ion-item {
+      --background: transparent;
+    }`
+        : null}
+  }
   /* --border-width: 1px 0 0 0; */
 `;
 
@@ -55,7 +69,12 @@ export default function Accordion({ name, label, status, onChange }) {
   };
 
   return (
-    <StyledAccordion readonly={false} value={name} toggleIconSlot="none">
+    <StyledAccordion
+      status={value}
+      readonly={false}
+      value={name}
+      toggleIconSlot="none"
+    >
       <Item status={value} lines="full" slot="header">
         {label}
         <Toggle value={value} slot="end" onIonChange={onToggle} />
