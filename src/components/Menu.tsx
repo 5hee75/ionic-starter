@@ -47,6 +47,12 @@ const appPages: AppPage[] = [
     url: "/page/Trash",
     iosIcon: trashOutline,
     mdIcon: trashSharp
+  },
+  {
+    title: "Wizard",
+    url: "/wizard",
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
   }
 ];
 

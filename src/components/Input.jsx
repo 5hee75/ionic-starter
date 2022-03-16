@@ -13,6 +13,8 @@ import {
   IonCol
 } from "@ionic/react";
 
+import { Field } from "react-final-form";
+
 export const InputItem = styled(IonItem).attrs((props) => ({
   lines: props.lines || "inset"
 }))`
@@ -75,7 +77,7 @@ export const Input = ({ adornment = "", ...props }) => {
 export const TextArea = ({ maxLength, ...props }) => {
   return (
     <InputBase className="form-row" counter {...props}>
-      <IonTextarea maxlength={maxLength} />
+      <IonTextarea {...props} maxlength={maxLength} />
     </InputBase>
   );
 };
@@ -89,5 +91,33 @@ export const SplitRow = ({ children = null }) => {
         <IonCol className="ion-no-padding">{child}</IonCol>
       ))}
     </IonRow>
+  );
+};
+
+export const FormInput = ({ name, ...inputProps }) => {
+  return (
+    <Field name={name}>
+      {(props) => (
+        <Input
+          {...inputProps}
+          value={props.input.value}
+          onIonChange={props.input.onChange}
+        />
+      )}
+    </Field>
+  );
+};
+
+export const FormTextArea = ({ name, ...inputProps }) => {
+  return (
+    <Field name={name}>
+      {(props) => (
+        <TextArea
+          {...inputProps}
+          value={props.input.value}
+          onIonChange={props.input.onChange}
+        />
+      )}
+    </Field>
   );
 };

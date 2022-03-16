@@ -14,7 +14,9 @@ import { camera } from "ionicons/icons";
 
 import Toggle from "./Toggle";
 import { TextArea } from "./Input";
-import { Select } from "./Select";
+import { Select, FormSelect } from "./Select";
+import { Field, useForm } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 
 /* --background: rgba(${props => (props.status === 'fail' ? var(--ion-color-danger-rgb) : var(--ion-color-success-rgb))}, 0.05); */
 const getColor = ({ status } = {}) => {
@@ -34,8 +36,9 @@ const StyledAccordion = styled(IonAccordion)`
     --background-hover: white;
     --ripple-color: white;
     --background-focused: white;
-    --border: 1;
-    --border-width: 1px 0 0 0;
+    /* --border: 1; */
+    /* --border-width: 1px 0 0; */
+    --border-color: var(--ion-color-light);
   }
 
   &:first-of-type > ion-item[slot="header"] {
@@ -70,20 +73,38 @@ const Thumb = styled(IonThumbnail)`
 
 const Button = styled(IonButton).attrs({
   expand: "block",
-  fill: "solid"
+  fill: "outline"
 })`
+  --border-radius: 8px;
+  --background: var(--ion-color-light);
+  --border-color: var(--ion-color-medium-tint);
+  --color: var(--ion-color-dark-tint);
+`;
+
+const FullButton = styled(Button)`
   width: 75%;
   margin: auto;
   margin-top: 24px;
 `;
 
-export default function Accordion({ name, label, status, onChange }) {
+export default function Accordion({ name, label, status, onExpandToggle }) {
   const [value, setValue] = React.useState(status);
   const [selected, setSelected] = React.useState([]);
-  const onToggle = (e) => {
-    console.log(e.detail.value);
-    setValue(e.detail.value);
-    onChange({ name, status: e.detail.value });
+
+  const {
+    mutators: { push, pop }
+  } = useForm();
+
+  // React.useEffect(() => {
+  //   setValue(status);
+  // }, [status]);
+
+  const onToggle = (onChange) => (e) => {
+    // console.log("Toggle", name, e.detail.value);
+    e.stopPropagation();
+    // setValue(e.detail.value);
+    onExpandToggle({ name, status: e.detail.value });
+    onChange(e.detail.value);
   };
 
   return (
@@ -93,33 +114,86 @@ export default function Accordion({ name, label, status, onChange }) {
       value={name}
       toggleIconSlot="none"
     >
-      <Item status={value} lines="full" slot="header">
-        {label}
-        <Toggle value={value} slot="end" onIonChange={onToggle} />
-      </Item>
+      <Field name={`${name}.status`}>
+        {(props) => (
+          <Item status={props.input.value} lines="full" slot="header">
+            {label}
+
+            <Toggle
+              slot="end"
+              value={props.input.value}
+              onIonChange={onToggle(props.input.onChange)}
+            />
+          </Item>
+        )}
+      </Field>
       <div slot="content" style={{ padding: "8px 12px 16px 0" }}>
         {/* <TextArea slot="content" label="Comments" maxLength={50} /> */}
-        <Select
+        <FormSelect
+          name={`${name}.description`}
           multiple
           label="Description"
-          value={selected}
           options={[
-            { label: "Bent", value: 1 },
-            { label: "Scratched", value: 2 },
-            { label: "Cracked", value: 3 },
-            { label: "Chipped", value: 4 }
+            { label: "Bent", value: "Bent" },
+            { label: "Scratched", value: "Scratched" },
+            { label: "Cracked", value: "Cracked" },
+            { label: "Chipped", value: "Chipped" }
           ]}
-          onSelect={(newSelected) => {
-            setSelected(newSelected);
-          }}
         />
         {/* <div style={{ width: "50%", margin: "auto" }}>
           <IonButton style={{ height: 48 }} fill="solid" expand="block" size="large">
             <IonIcon slot="icon-only" src={camera} />
           </IonButton>
         </div> */}
-        {selected?.length > 0 ? (
-          <IonItem>
+        <FieldArray name={`${name}.images`}>
+          {({ fields }) =>
+            fields?.length > 0 ? (
+              <IonItem lines="none">
+                {fields.map((_name, index) => (
+                  <Thumb key={_name}>
+                    <Field name={`${_name}.src`}>
+                      {(props) => <IonImg src={props.input.value} />}
+                    </Field>
+                  </Thumb>
+                ))}
+                {/* <Thumb>
+                  <IonImg src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1" />
+                </Thumb>
+                <Thumb>
+                  <IonImg src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1" />
+                </Thumb>
+                <Thumb>
+                  <IonImg src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1" />
+                </Thumb> */}
+                <Thumb slot="end">
+                  <Button
+                    onClick={() =>
+                      push(`${name}.images`, {
+                        src:
+                          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1"
+                      })
+                    }
+                  >
+                    <IonIcon slot="icon-only" src={camera} />
+                  </Button>
+                </Thumb>
+              </IonItem>
+            ) : (
+              <FullButton
+                onClick={() =>
+                  push(`${name}.images`, {
+                    src:
+                      "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1"
+                  })
+                }
+              >
+                <IonIcon slot="icon-only" src={camera} />
+              </FullButton>
+            )
+          }
+        </FieldArray>
+        {/* {selected?.length > 0 ? (
+          <IonItem lines="none">
             <Thumb>
               <IonImg src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1" />
             </Thumb>
@@ -130,17 +204,32 @@ export default function Accordion({ name, label, status, onChange }) {
               <IonImg src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpictures.topspeed.com%2FIMG%2Fcrop%2F200908%2Ftoyota-will-develop-_800x0w.jpg&f=1&nofb=1" />
             </Thumb>
             <Thumb slot="end">
-              <IonButton expand="block">
+              <Button>
                 <IonIcon slot="icon-only" src={camera} />
-              </IonButton>
+              </Button>
             </Thumb>
           </IonItem>
         ) : (
-          <Button>
+          <FullButton>
             <IonIcon slot="icon-only" src={camera} />
-          </Button>
-        )}
+          </FullButton>
+        )} */}
       </div>
     </StyledAccordion>
   );
 }
+
+export const FormAccordion = ({ name, ...props }) => {
+  return (
+    <Field name={name}>
+      {({ input }) => (
+        <Accordion
+          name={name}
+          {...props}
+          value={input.value}
+          onChange={input.onChange}
+        />
+      )}
+    </Field>
+  );
+};

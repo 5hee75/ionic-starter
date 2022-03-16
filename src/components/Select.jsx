@@ -28,6 +28,7 @@ import {
   checkmarkCircleOutline,
   closeCircleOutline
 } from "ionicons/icons";
+import { Field } from "react-final-form";
 
 const ListHeader = styled(IonListHeader)`
   font-size: 18px;
@@ -215,6 +216,7 @@ const SelectIcon = styled(IonIcon).attrs({
   }
 `;
 
+// Select component
 export function Select({
   label,
   options = [],
@@ -287,3 +289,17 @@ export function Select({
     </SelectItem>
   );
 }
+
+export const FormSelect = ({ name, ...selectProps }) => {
+  return (
+    <Field name={name}>
+      {(props) => (
+        <Select
+          {...selectProps}
+          value={props.input.value}
+          onSelect={props.input.onChange}
+        />
+      )}
+    </Field>
+  );
+};

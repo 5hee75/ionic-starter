@@ -234,10 +234,10 @@ http://ionicframework.com/docs/theming/ */
   }
 }
 
-ion-content.page {
+/* ion-content.page {
   --padding-end: 16px;
   --padding-start: 16px;
-}
+} */
 
 ion-modal.fixed::part(backdrop) {
   display: none;
